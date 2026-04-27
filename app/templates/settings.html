@@ -69,4 +69,98 @@
         </div>
     </form>
 </section>
+
+<section class="settings-grid top-gap">
+    <article class="panel pwa-panel">
+        <div class="section-head pwa-head">
+            <div>
+                <p class="eyebrow">Aplicativo</p>
+                <h3>Instalar PWA</h3>
+            </div>
+            <span class="status status-pending" id="pwa-status">verificando</span>
+        </div>
+        <p class="pwa-copy">Instale o CTC Aranha no celular para abrir como app, com acesso mais rapido e suporte offline basico.</p>
+        <div class="pwa-actions">
+            <button type="button" class="btn btn-primary" id="pwa-install-button">Baixar aplicativo</button>
+            <a href="{{ url_for('static', filename='manifest.webmanifest') }}" class="btn btn-ghost" download>Baixar manifesto</a>
+        </div>
+        <div class="settings-preview pwa-help" id="pwa-help">
+            <p class="eyebrow">Como instalar</p>
+            <p id="pwa-help-text">Se o navegador liberar a instalacao, toque em Baixar aplicativo.</p>
+        </div>
+    </article>
+</section>
+
+<script>
+    (() => {
+        const installButton = document.getElementById('pwa-install-button');
+        const statusBadge = document.getElementById('pwa-status');
+        const helpText = document.getElementById('pwa-help-text');
+
+        if (!installButton || !statusBadge || !helpText) {
+            return;
+        }
+
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+        const isIos = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+
+        const renderState = (canInstall) => {
+            if (isStandalone) {
+                statusBadge.textContent = 'instalado';
+                statusBadge.className = 'status status-paid';
+                installButton.disabled = true;
+                installButton.textContent = 'Aplicativo instalado';
+                helpText.textContent = 'O aplicativo ja esta instalado neste dispositivo.';
+                return;
+            }
+
+            if (canInstall) {
+                statusBadge.textContent = 'disponivel';
+                statusBadge.className = 'status status-pending';
+                installButton.disabled = false;
+                helpText.textContent = 'Toque em Baixar aplicativo para abrir o prompt de instalacao do navegador.';
+                return;
+            }
+
+            statusBadge.textContent = 'manual';
+            statusBadge.className = 'status status-late';
+            installButton.disabled = isIos;
+            installButton.textContent = isIos ? 'Instalacao via Safari' : 'Instalacao indisponivel';
+            helpText.textContent = isIos
+                ? 'No iPhone, abra no Safari, toque em Compartilhar e depois em Adicionar a Tela de Inicio.'
+                : 'Se o navegador nao mostrar o prompt, abra o menu do navegador e procure por Instalar aplicativo ou Adicionar a tela inicial.';
+        };
+
+        const syncAvailability = () => {
+            renderState(typeof window.ctcPromptPwaInstall === 'function');
+        };
+
+        installButton.addEventListener('click', async () => {
+            if (typeof window.ctcPromptPwaInstall !== 'function') {
+                renderState(false);
+                return;
+            }
+
+            const result = await window.ctcPromptPwaInstall();
+            if (!result.supported) {
+                renderState(false);
+                return;
+            }
+
+            if (result.outcome === 'accepted') {
+                statusBadge.textContent = 'instalado';
+                statusBadge.className = 'status status-paid';
+                installButton.disabled = true;
+                installButton.textContent = 'Instalacao iniciada';
+                helpText.textContent = 'O navegador aceitou a instalacao do aplicativo.';
+                return;
+            }
+
+            renderState(false);
+        });
+
+        window.addEventListener('ctc-pwa-available', syncAvailability);
+        syncAvailability();
+    })();
+</script>
 {% endblock %}

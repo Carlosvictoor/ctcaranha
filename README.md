@@ -24,10 +24,10 @@ Sistema web para controle da academia de muay thai CTC Aranha.
 4. Inicie com `python run.py` ou execute a tarefa `Iniciar CTC Aranha` no VS Code.
 5. Acesse `http://127.0.0.1:5000`.
 
-## Login padrão
+## Acesso inicial
 
-- Usuário: `admin`
-- Senha: `ctc123`
+- O sistema cria automaticamente um usuario administrador no primeiro boot.
+- A senha inicial deve ser alterada logo no primeiro acesso pela tela de configuracoes.
 
 ## Configuração do WhatsApp
 

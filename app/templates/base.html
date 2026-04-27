@@ -112,6 +112,29 @@
                 });
             }
 
+            let deferredInstallPrompt = null;
+
+            window.addEventListener('beforeinstallprompt', (event) => {
+                event.preventDefault();
+                deferredInstallPrompt = event;
+                window.dispatchEvent(new CustomEvent('ctc-pwa-available'));
+            });
+
+            window.ctcPromptPwaInstall = async () => {
+                if (!deferredInstallPrompt) {
+                    return { supported: false };
+                }
+
+                deferredInstallPrompt.prompt();
+                const choice = await deferredInstallPrompt.userChoice;
+                deferredInstallPrompt = null;
+                return { supported: true, outcome: choice.outcome };
+            };
+
+            window.matchMedia('(display-mode: standalone)').addEventListener('change', () => {
+                window.dispatchEvent(new CustomEvent('ctc-pwa-available'));
+            });
+
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
                     navigator.serviceWorker.register('{{ url_for("service_worker") }}');

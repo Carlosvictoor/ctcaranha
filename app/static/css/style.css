@@ -30,6 +30,11 @@ body {
     overflow-x: hidden;
 }
 
+html,
+body {
+    max-width: 100%;
+}
+
 body.nav-open {
     overflow: hidden;
 }
@@ -233,6 +238,7 @@ small {
 .main-content {
     width: 100%;
     max-width: var(--content-max);
+    min-width: 0;
     padding: 28px;
     margin: 0 auto;
 }
@@ -389,6 +395,7 @@ small {
 .login-form-wrap {
     display: grid;
     align-items: center;
+    min-width: 0;
 }
 
 .badge {
@@ -756,6 +763,43 @@ th {
     align-items: start;
 }
 
+.pwa-panel {
+    display: grid;
+    gap: 18px;
+}
+
+.pwa-head {
+    align-items: flex-start;
+}
+
+.pwa-copy {
+    margin: 0;
+}
+
+.pwa-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.pwa-actions .btn {
+    min-height: 48px;
+}
+
+.pwa-actions .btn[disabled] {
+    opacity: 0.58;
+    cursor: not-allowed;
+}
+
+.pwa-help {
+    display: grid;
+    gap: 8px;
+}
+
+.pwa-help p:last-child {
+    margin: 0;
+}
+
 .structure-grid {
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     align-items: start;
@@ -859,6 +903,11 @@ th {
         grid-template-columns: 1fr;
     }
 
+    .content-grid,
+    .structure-grid {
+        grid-template-columns: 1fr;
+    }
+
     .login-brand {
         text-align: center;
         justify-content: center;
@@ -870,6 +919,19 @@ th {
     .auth-layout,
     .sidebar {
         padding: 16px;
+    }
+
+    .login-stage,
+    .login-hero,
+    .login-copy,
+    .login-form-wrap,
+    .panel,
+    .settings-grid,
+    .content-grid,
+    .stats-grid,
+    .structure-grid,
+    .report-grid {
+        min-width: 0;
     }
 
     .panel {
@@ -936,6 +998,15 @@ th {
     .list-item {
         flex-direction: column;
         align-items: stretch;
+    }
+
+    .pwa-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .pwa-actions .btn {
+        width: 100%;
     }
 
     .feature-grid {
@@ -1081,6 +1152,14 @@ th {
 
     .login-brand h1 {
         font-size: 2rem;
+    }
+
+    .login-copy,
+    .login-brand,
+    .hero-banner,
+    .panel,
+    .mobile-shell-bar {
+        max-width: 100%;
     }
 
     .filter-tabs {
