@@ -1,4 +1,5 @@
-const CACHE_NAME = 'ctc-aranha-v1';
+const CACHE_VERSION = new URL(self.location.href).searchParams.get('v') || 'v2';
+const CACHE_NAME = `ctc-aranha-${CACHE_VERSION}`;
 const APP_SHELL = [
   '/',
   '/static/css/style.css',

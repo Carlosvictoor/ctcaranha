@@ -35,6 +35,7 @@ def create_app():
     load_dotenv()
     app = Flask(__name__)
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "ctc-aranha-secret")
+    app.config["ASSET_VERSION"] = os.getenv("ASSET_VERSION") or datetime.utcnow().strftime("%Y%m%d%H%M%S")
     app.config["SQLALCHEMY_DATABASE_URI"] = resolve_database_uri(app)
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["SESSION_COOKIE_HTTPONLY"] = True
@@ -59,7 +60,11 @@ def create_app():
 
     @app.context_processor
     def inject_now():
-        return {"current_year": datetime.now().year, "app_settings": get_app_settings()}
+        return {
+            "current_year": datetime.now().year,
+            "app_settings": get_app_settings(),
+            "asset_version": app.config["ASSET_VERSION"],
+        }
 
     @app.template_filter("currency")
     def currency_filter(value):

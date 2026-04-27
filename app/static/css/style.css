@@ -1,7 +1,7 @@
 :root {
     --bg: #090909;
     --bg-soft: #121212;
-    --panel: rgba(19, 19, 19, 0.88);
+    --panel: rgba(16, 16, 16, 0.97);
     --panel-border: rgba(255, 215, 87, 0.18);
     --text: #f7f1d8;
     --muted: #c8bc92;
@@ -22,6 +22,9 @@ body {
     margin: 0;
     min-height: 100vh;
     font-family: Bahnschrift, "Arial Narrow", sans-serif;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     color: var(--text);
     background:
         radial-gradient(circle at top left, rgba(193, 18, 31, 0.35), transparent 28%),
@@ -119,9 +122,8 @@ textarea,
     justify-content: space-between;
     min-height: 100vh;
     padding: 34px 24px;
-    background: linear-gradient(180deg, rgba(16, 16, 16, 0.95), rgba(10, 10, 10, 0.9));
+    background: linear-gradient(180deg, rgba(12, 12, 12, 0.99), rgba(9, 9, 9, 0.98));
     border-right: 1px solid rgba(255, 255, 255, 0.06);
-    backdrop-filter: blur(10px);
 }
 
 .sidebar-backdrop,
@@ -279,7 +281,6 @@ small {
     border-radius: var(--radius);
     box-shadow: var(--shadow);
     padding: 24px;
-    backdrop-filter: blur(18px);
     overflow: hidden;
 }
 
@@ -872,8 +873,7 @@ th {
         position: fixed;
         inset: 0;
         z-index: 11;
-        background: rgba(0, 0, 0, 0.55);
-        backdrop-filter: blur(4px);
+        background: rgba(0, 0, 0, 0.72);
     }
 
     .mobile-shell-bar,

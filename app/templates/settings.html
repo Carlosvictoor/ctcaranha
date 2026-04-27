@@ -82,7 +82,7 @@
         <p class="pwa-copy">Instale o CTC Aranha no celular para abrir como app, com acesso mais rapido e suporte offline basico.</p>
         <div class="pwa-actions">
             <button type="button" class="btn btn-primary" id="pwa-install-button">Baixar aplicativo</button>
-            <a href="{{ url_for('static', filename='manifest.webmanifest') }}" class="btn btn-ghost" download>Baixar manifesto</a>
+            <a href="{{ url_for('static', filename='manifest.webmanifest', v=asset_version) }}" class="btn btn-ghost" download>Baixar manifesto</a>
         </div>
         <div class="settings-preview pwa-help" id="pwa-help">
             <p class="eyebrow">Como instalar</p>
