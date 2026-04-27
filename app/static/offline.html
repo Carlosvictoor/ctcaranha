@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#090909">
+  <title>Sem conexao | CTC Aranha</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #090909;
+      --panel: rgba(19, 19, 19, 0.92);
+      --border: rgba(246, 196, 69, 0.18);
+      --text: #f7f1d8;
+      --muted: #c8bc92;
+      --gold: #f6c445;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      font-family: Bahnschrift, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(193, 18, 31, 0.35), transparent 28%),
+        radial-gradient(circle at top right, rgba(246, 196, 69, 0.18), transparent 24%),
+        linear-gradient(135deg, #050505 0%, #130505 48%, #090909 100%);
+    }
+    .card {
+      width: min(100%, 420px);
+      padding: 28px;
+      border-radius: 28px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.42);
+    }
+    h1 {
+      margin: 0 0 12px;
+      font-family: Impact, sans-serif;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    p {
+      margin: 0 0 18px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 12px 18px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #c1121f, #f6c445);
+      color: #160b00;
+      font-weight: 700;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>Sem conexao</h1>
+    <p>O painel nao conseguiu acessar a internet agora. Assim que a conexao voltar, recarregue para continuar usando o sistema.</p>
+    <a href="/">Tentar novamente</a>
+  </main>
+</body>
+</html>

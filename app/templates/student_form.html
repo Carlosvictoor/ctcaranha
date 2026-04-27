@@ -14,15 +14,15 @@
 <form method="post" class="panel form-grid">
     <label>
         <span>Nome completo</span>
-        <input type="text" name="full_name" value="{{ student.full_name if student else '' }}" required>
+        <input type="text" name="full_name" value="{{ student.full_name if student else '' }}" autocomplete="name" required>
     </label>
     <label>
         <span>Telefone WhatsApp</span>
-        <input type="text" name="phone" value="{{ student.phone if student else '' }}" placeholder="+5511999999999" required>
+        <input type="tel" name="phone" value="{{ student.phone if student else '' }}" placeholder="+5511999999999" inputmode="tel" autocomplete="tel" required>
     </label>
     <label>
         <span>E-mail</span>
-        <input type="email" name="email" value="{{ student.email if student else '' }}">
+        <input type="email" name="email" value="{{ student.email if student else '' }}" inputmode="email" autocomplete="email">
     </label>
     <label>
         <span>Plano cadastrado</span>
@@ -48,7 +48,7 @@
     </label>
     <label>
         <span>Mensalidade</span>
-        <input type="number" step="0.01" min="0" name="monthly_fee" id="monthly_fee" value="{{ student.monthly_fee if student else '' }}" required>
+        <input type="number" step="0.01" min="0" name="monthly_fee" id="monthly_fee" value="{{ student.monthly_fee if student else '' }}" inputmode="decimal" required>
     </label>
     <label>
         <span>Regra de vencimento</span>

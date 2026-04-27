@@ -20,12 +20,12 @@
 
         <label>
             <span>Nome da academia</span>
-            <input type="text" name="gym_name" value="{{ settings.gym_name }}" required>
+            <input type="text" name="gym_name" value="{{ settings.gym_name }}" autocomplete="organization" required>
         </label>
 
         <label>
             <span>Dias antes do vencimento</span>
-            <input type="number" min="0" max="30" name="reminder_days_before" value="{{ settings.reminder_days_before }}" required>
+            <input type="number" min="0" max="30" name="reminder_days_before" value="{{ settings.reminder_days_before }}" inputmode="numeric" required>
         </label>
 
         <label class="full-width">

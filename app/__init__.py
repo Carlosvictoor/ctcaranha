@@ -11,11 +11,31 @@ from app.extensions import db, login_manager, scheduler
 from app.models import AppSettings, ClassSchedule, Payment, Student, TrainingPlan, User, get_app_settings
 
 
+def resolve_database_uri(app):
+    database_url = os.getenv("DATABASE_URL")
+    if database_url:
+        if database_url.startswith("postgres://"):
+            database_url = database_url.replace("postgres://", "postgresql+psycopg://", 1)
+        elif database_url.startswith("postgresql://") and "+" not in database_url.split("://", 1)[0]:
+            database_url = database_url.replace("postgresql://", "postgresql+psycopg://", 1)
+        return database_url
+
+    sqlite_path = os.getenv("SQLITE_PATH")
+    if sqlite_path:
+        sqlite_file = Path(sqlite_path).expanduser()
+        if not sqlite_file.is_absolute():
+            sqlite_file = Path(app.root_path).parent / sqlite_file
+        sqlite_file.parent.mkdir(parents=True, exist_ok=True)
+        return f"sqlite:///{sqlite_file.resolve()}"
+
+    return f"sqlite:///{Path(app.root_path) / 'ctc_aranha.db'}"
+
+
 def create_app():
     load_dotenv()
     app = Flask(__name__)
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "ctc-aranha-secret")
-    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{os.path.join(app.root_path, 'ctc_aranha.db')}"
+    app.config["SQLALCHEMY_DATABASE_URI"] = resolve_database_uri(app)
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["SESSION_COOKIE_HTTPONLY"] = True
     app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
@@ -309,3 +329,6 @@ def configure_scheduler(app):
         replace_existing=True,
     )
     scheduler.start()
+
+
+app = create_app()

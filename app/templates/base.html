@@ -3,15 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#090909">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>{% block title %}CTC Aranha{% endblock %}</title>
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.webmanifest') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='icons/icon-app.svg') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body>
+<body class="{% if current_user.is_authenticated %}has-app-nav{% endif %}">
+    <a href="#main-content" class="skip-link">Ir para o conteudo</a>
     <div class="brand-orbit brand-orbit-left"></div>
     <div class="brand-orbit brand-orbit-right"></div>
     <div class="page-shell {% if not current_user.is_authenticated %}page-shell-auth{% endif %}">
         {% if current_user.is_authenticated %}
-        <aside class="sidebar">
+        <div class="sidebar-backdrop" data-nav-overlay hidden></div>
+        <aside class="sidebar" id="app-sidebar" aria-label="Menu principal">
             <div>
                 <p class="eyebrow">Academia de Muay Thai</p>
                 <h1>{{ app_settings.gym_name }}</h1>
@@ -32,7 +39,21 @@
         </aside>
         {% endif %}
 
-        <main class="main-content {% if not current_user.is_authenticated %}auth-layout{% endif %}">
+        <main id="main-content" class="main-content {% if not current_user.is_authenticated %}auth-layout{% endif %}">
+            {% if current_user.is_authenticated %}
+            <div class="mobile-shell-bar panel">
+                <div>
+                    <p class="eyebrow">Painel administrativo</p>
+                    <strong>{{ app_settings.gym_name }}</strong>
+                </div>
+                <button type="button" class="nav-toggle" data-nav-toggle aria-expanded="false" aria-controls="app-sidebar">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span class="nav-toggle-text">Menu</span>
+                </button>
+            </div>
+            {% endif %}
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     <div class="flash-stack">
@@ -46,5 +67,57 @@
             {% block content %}{% endblock %}
         </main>
     </div>
+
+    <script>
+        (() => {
+            const sidebar = document.getElementById('app-sidebar');
+            const toggle = document.querySelector('[data-nav-toggle]');
+            const overlay = document.querySelector('[data-nav-overlay]');
+
+            const closeNav = () => {
+                if (!sidebar || !toggle || !overlay) {
+                    return;
+                }
+                sidebar.classList.remove('is-open');
+                document.body.classList.remove('nav-open');
+                toggle.setAttribute('aria-expanded', 'false');
+                overlay.hidden = true;
+            };
+
+            const openNav = () => {
+                if (!sidebar || !toggle || !overlay) {
+                    return;
+                }
+                sidebar.classList.add('is-open');
+                document.body.classList.add('nav-open');
+                toggle.setAttribute('aria-expanded', 'true');
+                overlay.hidden = false;
+            };
+
+            if (toggle && sidebar && overlay) {
+                toggle.addEventListener('click', () => {
+                    if (sidebar.classList.contains('is-open')) {
+                        closeNav();
+                        return;
+                    }
+                    openNav();
+                });
+
+                overlay.addEventListener('click', closeNav);
+                sidebar.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeNav));
+                window.addEventListener('resize', () => {
+                    if (window.innerWidth > 1080) {
+                        closeNav();
+                    }
+                });
+            }
+
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('{{ url_for("service_worker") }}');
+                });
+            }
+        })();
+    </script>
 </body>
 </html>

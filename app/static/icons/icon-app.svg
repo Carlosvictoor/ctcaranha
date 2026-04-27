@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title>CTC Aranha</title>
+  <desc>Icone do painel CTC Aranha em vermelho, dourado e preto.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#c1121f"/>
+      <stop offset="100%" stop-color="#f6c445"/>
+    </linearGradient>
+    <linearGradient id="ink" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#1a0a00"/>
+      <stop offset="100%" stop-color="#090909"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="120" fill="url(#bg)"/>
+  <circle cx="256" cy="256" r="176" fill="rgba(0,0,0,0.16)"/>
+  <path d="M166 154h180v44H271v116c0 28 14 42 40 42 12 0 24-2 35-6v44c-15 8-33 12-54 12-58 0-93-33-93-88V198h-33z" fill="url(#ink)"/>
+  <path d="M137 377c25-38 68-59 119-59s94 21 119 59" fill="none" stroke="#1a0a00" stroke-width="22" stroke-linecap="round"/>
+  <path d="M161 120c17 22 33 45 49 68M351 120c-17 22-33 45-49 68M111 220l83 17M401 220l-83 17M128 316l71-30M384 316l-71-30" fill="none" stroke="#fff0b5" stroke-width="18" stroke-linecap="round" opacity="0.85"/>
+</svg>

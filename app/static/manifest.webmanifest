@@ -1,0 +1,21 @@
+{
+  "name": "CTC Aranha",
+  "short_name": "CTC",
+  "description": "Painel administrativo da academia CTC Aranha com alunos, mensalidades e relatorios.",
+  "lang": "pt-BR",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#090909",
+  "theme_color": "#090909",
+  "categories": ["business", "finance", "productivity"],
+  "icons": [
+    {
+      "src": "/static/icons/icon-app.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

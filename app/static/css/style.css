@@ -30,6 +30,26 @@ body {
     overflow-x: hidden;
 }
 
+body.nav-open {
+    overflow: hidden;
+}
+
+.skip-link {
+    position: absolute;
+    left: 16px;
+    top: -64px;
+    z-index: 20;
+    padding: 12px 16px;
+    border-radius: 14px;
+    background: var(--gold);
+    color: #160b00;
+    font-weight: 700;
+}
+
+.skip-link:focus {
+    top: 16px;
+}
+
 .brand-orbit {
     position: fixed;
     width: 320px;
@@ -64,6 +84,16 @@ textarea {
     font: inherit;
 }
 
+button,
+select,
+input,
+textarea,
+.btn,
+.nav-links a,
+.filter-tabs a {
+    touch-action: manipulation;
+}
+
 .page-shell {
     display: grid;
     grid-template-columns: minmax(250px, 290px) minmax(0, 1fr);
@@ -87,6 +117,53 @@ textarea {
     background: linear-gradient(180deg, rgba(16, 16, 16, 0.95), rgba(10, 10, 10, 0.9));
     border-right: 1px solid rgba(255, 255, 255, 0.06);
     backdrop-filter: blur(10px);
+}
+
+.sidebar-backdrop,
+.mobile-shell-bar {
+    display: none;
+}
+
+.mobile-shell-bar {
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+    padding: 14px 16px;
+}
+
+.mobile-shell-bar strong {
+    display: block;
+    font-size: 1rem;
+}
+
+.nav-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 48px;
+    padding: 10px 14px;
+    border: 1px solid rgba(246, 196, 69, 0.28);
+    border-radius: 16px;
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.nav-toggle span {
+    display: block;
+    width: 18px;
+    height: 2px;
+    border-radius: 999px;
+    background: currentColor;
+}
+
+.nav-toggle .nav-toggle-text {
+    width: auto;
+    height: auto;
+    background: transparent;
+    font-size: 0.92rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
 }
 
 .sidebar h1,
@@ -528,6 +605,18 @@ td strong {
     max-width: 100%;
 }
 
+input,
+select,
+textarea {
+    width: 100%;
+    min-height: 48px;
+}
+
+textarea {
+    min-height: 128px;
+    resize: vertical;
+}
+
 .table-wrap {
     overflow-x: auto;
     border-radius: 20px;
@@ -718,26 +807,44 @@ th {
     }
 
     .sidebar {
-        position: relative;
-        min-height: auto;
-        padding: 22px 20px;
-        border-right: 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        position: fixed;
+        inset: 0 auto 0 0;
+        width: min(86vw, 340px);
+        min-height: 100vh;
+        padding: 22px 20px 30px;
+        border-right: 1px solid rgba(255, 255, 255, 0.06);
+        border-bottom: 0;
+        z-index: 12;
+        transform: translateX(-105%);
+        transition: transform 0.24s ease;
+        overflow-y: auto;
+    }
+
+    .sidebar.is-open {
+        transform: translateX(0);
+    }
+
+    .sidebar-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 11;
+        background: rgba(0, 0, 0, 0.55);
+        backdrop-filter: blur(4px);
+    }
+
+    .mobile-shell-bar,
+    .sidebar-backdrop {
+        display: flex;
     }
 
     .nav-links {
-        display: flex;
-        flex-wrap: nowrap;
-        overflow-x: auto;
+        display: grid;
         gap: 10px;
-        padding-bottom: 6px;
-        margin: 24px -4px 0;
-        scrollbar-width: thin;
+        margin: 24px 0 0;
     }
 
     .nav-links a {
-        flex: 0 0 auto;
-        white-space: nowrap;
+        white-space: normal;
     }
 
     .sidebar-footer {
@@ -841,11 +948,17 @@ th {
         width: 100%;
     }
 
+    .form-actions {
+        gap: 10px;
+        justify-content: stretch;
+    }
+
     .action-row .btn,
     .action-row form,
     .table-actions .btn,
     .table-actions form,
-    .form-actions .btn {
+    .form-actions .btn,
+    .form-actions form {
         width: 100%;
     }
 
@@ -932,6 +1045,10 @@ th {
         justify-self: start;
     }
 
+    .status {
+        min-width: 0;
+    }
+
     .brand-orbit {
         width: 220px;
         height: 220px;
@@ -968,6 +1085,16 @@ th {
 
     .filter-tabs {
         grid-template-columns: 1fr;
+    }
+
+    .mobile-shell-bar {
+        padding: 12px 14px;
+        border-radius: 18px;
+    }
+
+    .nav-toggle {
+        width: 100%;
+        justify-content: center;
     }
 
     td {

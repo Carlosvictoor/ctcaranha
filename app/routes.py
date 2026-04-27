@@ -95,6 +95,13 @@ def parse_settings_form(form, fallback_template):
 
 
 def register_routes(app):
+    @app.get("/sw.js")
+    def service_worker():
+        response = send_from_directory(current_app.static_folder, "sw.js")
+        response.headers["Cache-Control"] = "no-cache"
+        response.mimetype = "application/javascript"
+        return response
+
     @app.route("/", methods=["GET", "POST"])
     def login():
         if current_user.is_authenticated:

@@ -12,6 +12,8 @@ Sistema web para controle da academia de muay thai CTC Aranha.
 - Relatórios financeiros e operacionais com exportação CSV e PDF
 - Avisos por WhatsApp em dois modos: manual por clique sem custo de API ou automático via Twilio quando configurado
 - Backup manual do banco e troca de senha do administrador pelo painel
+- Layout ajustado para uso móvel com navegação otimizada para celular
+- Suporte a instalação como PWA com manifest, service worker e fallback offline
 - Tarefa pronta no VS Code para subir o servidor local
 
 ## Execução local
@@ -48,6 +50,8 @@ Pelo menu de configurações do painel é possível alterar:
 ## Variáveis opcionais
 
 - `SECRET_KEY`
+- `DATABASE_URL` para produção com banco persistente, como PostgreSQL
+- `SQLITE_PATH` para apontar o SQLite para um volume persistente quando não usar PostgreSQL
 - `TWILIO_ACCOUNT_SID`
 - `TWILIO_AUTH_TOKEN`
 - `TWILIO_WHATSAPP_FROM`
@@ -70,3 +74,17 @@ Pelo menu de configurações do painel é possível alterar:
 - Troque a senha padrão do admin no primeiro acesso.
 - Mantenha backups periódicos da pasta `backups`.
 - Em produção, use um servidor WSGI e mantenha `DISABLE_SCHEDULER=0` para processar lembretes automáticos.
+- Para o deploy nao parecer um reset, nao use o SQLite interno da pasta da app em hospedagens com filesystem efemero.
+- Prefira configurar `DATABASE_URL` com PostgreSQL do provedor.
+- Se for manter SQLite, configure `SQLITE_PATH` apontando para um volume persistente fora do pacote publicado.
+- Com banco persistente, novos deploys reiniciam apenas o processo web, sem recriar seus dados.
+- Para a instalacao como PWA funcionar melhor, publique sempre em HTTPS.
+
+## Railway
+
+- O projeto agora inclui `railway.toml` com start em `gunicorn run:app --bind 0.0.0.0:$PORT`.
+- Tambem existe `app.py` na raiz para compatibilidade extra com detectores automaticos de entrypoint.
+- No painel do Railway, configure pelo menos `SECRET_KEY` e `DATABASE_URL`.
+- O `PORT` e fornecido automaticamente pelo Railway e nao precisa ser definido manualmente.
+- Se o banco for PostgreSQL do proprio Railway, use a URL entregue pelo plugin sem alterar manualmente.
+- Em producao no Railway, evite usar o SQLite interno da aplicacao porque o filesystem pode ser recriado a cada deploy.
