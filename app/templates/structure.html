@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+
+{% block title %}Estrutura | {{ app_settings.gym_name }}{% endblock %}
+
+{% block content %}
+<section class="section-head hero-inline">
+    <div>
+        <p class="eyebrow">Operacao tecnica</p>
+        <h2>Planos e turmas</h2>
+    </div>
+</section>
+
+<section class="structure-grid">
+    <form method="post" class="panel form-grid">
+        <input type="hidden" name="form_name" value="plan">
+        <div class="full-width settings-preview">
+            <p class="eyebrow">Novo plano</p>
+            <h3>Cadastre planos comerciais</h3>
+            <p>Defina valor e descricao para uso no cadastro de alunos. O vencimento sera sempre um mes apos o ultimo pagamento.</p>
+        </div>
+        <label>
+            <span>Nome do plano</span>
+            <input type="text" name="name" required>
+        </label>
+        <label>
+            <span>Mensalidade</span>
+            <input type="number" name="monthly_fee" step="0.01" min="0" required>
+        </label>
+        <label class="full-width">
+            <span>Descricao</span>
+            <textarea name="description" rows="4"></textarea>
+        </label>
+        <label class="checkbox-row full-width">
+            <input type="checkbox" name="active" checked>
+            <span>Plano ativo para novas matriculas</span>
+        </label>
+        <div class="form-actions full-width">
+            <button type="submit" class="btn btn-primary">Salvar plano</button>
+        </div>
+    </form>
+
+    <form method="post" class="panel form-grid">
+        <input type="hidden" name="form_name" value="schedule">
+        <div class="full-width settings-preview">
+            <p class="eyebrow">Nova turma</p>
+            <h3>Cadastro de horarios</h3>
+            <p>Organize dias, faixa de horario, nivel e professor responsável.</p>
+        </div>
+        <label>
+            <span>Nome da turma</span>
+            <input type="text" name="title" required>
+        </label>
+        <label>
+            <span>Dias</span>
+            <input type="text" name="day_of_week" placeholder="Segunda e Quarta" required>
+        </label>
+        <label>
+            <span>Inicio</span>
+            <input type="time" name="start_time" required>
+        </label>
+        <label>
+            <span>Fim</span>
+            <input type="time" name="end_time" required>
+        </label>
+        <label>
+            <span>Professor</span>
+            <input type="text" name="coach">
+        </label>
+        <label>
+            <span>Nivel</span>
+            <input type="text" name="level" placeholder="Iniciante, Misto, Avancado">
+        </label>
+        <label class="checkbox-row full-width">
+            <input type="checkbox" name="active" checked>
+            <span>Turma ativa para novas matriculas</span>
+        </label>
+        <div class="form-actions full-width">
+            <button type="submit" class="btn btn-primary">Salvar turma</button>
+        </div>
+    </form>
+</section>
+
+<section class="structure-grid top-gap">
+    <article class="panel">
+        <div class="section-head">
+            <div>
+                <p class="eyebrow">Catalogo</p>
+                <h3>Planos cadastrados</h3>
+            </div>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Plano</th>
+                        <th>Mensalidade</th>
+                        <th>Alunos</th>
+                        <th>Status</th>
+                        <th>Acoes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for plan in plan_rows %}
+                    <tr>
+                        <td data-label="Plano"><strong>{{ plan[1] }}</strong></td>
+                        <td data-label="Mensalidade">{{ plan[2]|currency }}</td>
+                        <td data-label="Alunos">{{ plan[4] }}</td>
+                        <td data-label="Status"><span class="status {% if plan[3] %}status-paid{% else %}status-late{% endif %}">{% if plan[3] %}ativo{% else %}inativo{% endif %}</span></td>
+                        <td data-label="Acoes">
+                            <div class="table-actions">
+                                <form method="post" action="{{ url_for('toggle_plan_status', plan_id=plan[0]) }}">
+                                    <button type="submit" class="btn btn-secondary">Alternar</button>
+                                </form>
+                                <form method="post" action="{{ url_for('delete_plan', plan_id=plan[0]) }}" onsubmit="return confirm('Excluir este plano?');">
+                                    <button type="submit" class="btn btn-danger">Excluir</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="empty-state">Nenhum plano cadastrado.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </article>
+
+    <article class="panel">
+        <div class="section-head">
+            <div>
+                <p class="eyebrow">Grade</p>
+                <h3>Turmas cadastradas</h3>
+            </div>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Turma</th>
+                        <th>Dias</th>
+                        <th>Horario</th>
+                        <th>Nivel</th>
+                        <th>Alunos</th>
+                        <th>Status</th>
+                        <th>Acoes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in class_rows %}
+                    <tr>
+                        <td data-label="Turma"><strong>{{ row[1] }}</strong></td>
+                        <td data-label="Dias">{{ row[2] }}</td>
+                        <td data-label="Horario">{{ row[3] }}</td>
+                        <td data-label="Nivel">{{ row[4] or '-' }}</td>
+                        <td data-label="Alunos">{{ row[6] }}</td>
+                        <td data-label="Status"><span class="status {% if row[5] %}status-paid{% else %}status-late{% endif %}">{% if row[5] %}ativa{% else %}inativa{% endif %}</span></td>
+                        <td data-label="Acoes">
+                            <div class="table-actions">
+                                <form method="post" action="{{ url_for('toggle_schedule_status', schedule_id=row[0]) }}">
+                                    <button type="submit" class="btn btn-secondary">Alternar</button>
+                                </form>
+                                <form method="post" action="{{ url_for('delete_schedule', schedule_id=row[0]) }}" onsubmit="return confirm('Excluir esta turma?');">
+                                    <button type="submit" class="btn btn-danger">Excluir</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="7" class="empty-state">Nenhuma turma cadastrada.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </article>
+</section>
+{% endblock %}

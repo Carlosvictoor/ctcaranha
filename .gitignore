@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Banco local e backups gerados na máquina
+app/ctc_aranha.db
+backups/*.db
+
+# Configurações locais do editor
+.vscode/

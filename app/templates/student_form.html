@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if student %}Editar aluno{% else %}Novo aluno{% endif %} | CTC Aranha{% endblock %}
+
+{% block content %}
+<section class="section-head hero-inline">
+    <div>
+        <p class="eyebrow">Ficha do aluno</p>
+        <h2>{% if student %}Atualizar cadastro{% else %}Cadastrar novo aluno{% endif %}</h2>
+    </div>
+    <a href="{{ url_for('students') }}" class="btn btn-secondary">Voltar</a>
+</section>
+
+<form method="post" class="panel form-grid">
+    <label>
+        <span>Nome completo</span>
+        <input type="text" name="full_name" value="{{ student.full_name if student else '' }}" required>
+    </label>
+    <label>
+        <span>Telefone WhatsApp</span>
+        <input type="text" name="phone" value="{{ student.phone if student else '' }}" placeholder="+5511999999999" required>
+    </label>
+    <label>
+        <span>E-mail</span>
+        <input type="email" name="email" value="{{ student.email if student else '' }}">
+    </label>
+    <label>
+        <span>Plano cadastrado</span>
+        <select name="plan_id" id="plan_id">
+            <option value="">Selecionar depois</option>
+            {% for plan in plans %}
+            <option value="{{ plan.id }}" data-fee="{{ plan.monthly_fee }}" {% if student and student.plan_id == plan.id %}selected{% endif %}>{{ plan.name }}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <label>
+        <span>Nome do plano manual</span>
+        <input type="text" name="plan_name" id="plan_name" value="{{ student.plan if student else '' }}" placeholder="Muay Thai Iniciante" required>
+    </label>
+    <label>
+        <span>Turma</span>
+        <select name="class_schedule_id">
+            <option value="">Sem turma definida</option>
+            {% for schedule in schedules %}
+            <option value="{{ schedule.id }}" {% if student and student.class_schedule_id == schedule.id %}selected{% endif %}>{{ schedule.title }} - {{ schedule.day_of_week }} - {{ schedule.start_time }} as {{ schedule.end_time }}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <label>
+        <span>Mensalidade</span>
+        <input type="number" step="0.01" min="0" name="monthly_fee" id="monthly_fee" value="{{ student.monthly_fee if student else '' }}" required>
+    </label>
+    <label>
+        <span>Regra de vencimento</span>
+        <input type="text" value="Sempre 1 mes apos o ultimo pagamento" readonly>
+    </label>
+    <label class="full-width">
+        <span>Observacoes</span>
+        <textarea name="notes" rows="5">{{ student.notes if student else '' }}</textarea>
+    </label>
+    <label class="checkbox-row full-width">
+        <input type="checkbox" name="active" {% if student is none or student.active %}checked{% endif %}>
+        <span>Aluno ativo para gerar cobrancas</span>
+    </label>
+
+    <div class="form-actions full-width">
+        <button type="submit" class="btn btn-primary">Salvar cadastro</button>
+        {% if student %}
+        <button
+            type="submit"
+            class="btn btn-danger"
+            formaction="{{ url_for('delete_student', student_id=student.id) }}"
+            formmethod="post"
+            onclick="return confirm('Tem certeza que deseja excluir este aluno?');"
+        >
+            Excluir aluno
+        </button>
+        {% endif %}
+    </div>
+</form>
+
+<script>
+    const planSelect = document.getElementById('plan_id');
+    const planNameInput = document.getElementById('plan_name');
+    const monthlyFeeInput = document.getElementById('monthly_fee');
+
+    if (planSelect) {
+        planSelect.addEventListener('change', () => {
+            const selected = planSelect.options[planSelect.selectedIndex];
+            if (!selected.value) {
+                return;
+            }
+
+            planNameInput.value = selected.text;
+            monthlyFeeInput.value = selected.dataset.fee;
+        });
+    }
+</script>
+{% endblock %}

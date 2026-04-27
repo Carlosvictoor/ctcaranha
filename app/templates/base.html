@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CTC Aranha{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="brand-orbit brand-orbit-left"></div>
+    <div class="brand-orbit brand-orbit-right"></div>
+    <div class="page-shell {% if not current_user.is_authenticated %}page-shell-auth{% endif %}">
+        {% if current_user.is_authenticated %}
+        <aside class="sidebar">
+            <div>
+                <p class="eyebrow">Academia de Muay Thai</p>
+                <h1>{{ app_settings.gym_name }}</h1>
+                <p class="sidebar-copy">Controle completo de alunos, mensalidades e operacao.</p>
+            </div>
+            <nav class="nav-links">
+                <a href="{{ url_for('dashboard') }}" class="{% if request.endpoint == 'dashboard' %}active{% endif %}">Financeiro</a>
+                <a href="{{ url_for('students') }}" class="{% if request.endpoint in ['students', 'create_student', 'edit_student'] %}active{% endif %}">Alunos</a>
+                <a href="{{ url_for('structure') }}" class="{% if request.endpoint in ['structure', 'toggle_plan_status', 'toggle_schedule_status', 'delete_plan', 'delete_schedule'] %}active{% endif %}">Planos e Turmas</a>
+                <a href="{{ url_for('payments') }}" class="{% if request.endpoint == 'payments' %}active{% endif %}">Mensalidades</a>
+                <a href="{{ url_for('reports') }}" class="{% if request.endpoint == 'reports' %}active{% endif %}">Relatorios</a>
+                <a href="{{ url_for('settings') }}" class="{% if request.endpoint == 'settings' %}active{% endif %}">Configuracoes</a>
+            </nav>
+            <div class="sidebar-footer">
+                <span>Painel administrativo</span>
+                <a href="{{ url_for('logout') }}">Sair</a>
+            </div>
+        </aside>
+        {% endif %}
+
+        <main class="main-content {% if not current_user.is_authenticated %}auth-layout{% endif %}">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-stack">
+                        {% for category, message in messages %}
+                            <div class="flash flash-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</body>
+</html>

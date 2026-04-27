@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}Mensalidades | CTC Aranha{% endblock %}
+
+{% block content %}
+<section class="section-head hero-inline">
+    <div>
+        <p class="eyebrow">Financeiro</p>
+        <h2>Controle de mensalidades</h2>
+    </div>
+    <div class="action-row">
+        <form method="post" action="{{ url_for('generate_payments') }}">
+            <button type="submit" class="btn btn-secondary">Gerar mes atual</button>
+        </form>
+        {% if use_twilio %}
+        <form method="post" action="{{ url_for('process_reminders') }}">
+            <button type="submit" class="btn btn-primary">Rodar avisos</button>
+        </form>
+        {% endif %}
+    </div>
+</section>
+
+<section class="panel">
+    <div class="filter-tabs">
+        <a href="{{ url_for('payments', status='all') }}" class="{% if status == 'all' %}active{% endif %}">Todas</a>
+        <a href="{{ url_for('payments', status='pending') }}" class="{% if status == 'pending' %}active{% endif %}">Pendentes</a>
+        <a href="{{ url_for('payments', status='late') }}" class="{% if status == 'late' %}active{% endif %}">Vencidas</a>
+        <a href="{{ url_for('payments', status='paid') }}" class="{% if status == 'paid' %}active{% endif %}">Pagas</a>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Aluno</th>
+                    <th>Referencia</th>
+                    <th>Valor</th>
+                    <th>Vencimento</th>
+                    <th>Status</th>
+                    <th>Acoes</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for payment in payments %}
+                <tr>
+                    <td data-label="Aluno">
+                        <strong>{{ payment.student.full_name }}</strong>
+                        <span>{{ payment.student.phone }}</span>
+                    </td>
+                    <td data-label="Referencia">{{ payment.reference_month }}</td>
+                    <td data-label="Valor">{{ payment.amount|currency }}</td>
+                    <td data-label="Vencimento">{{ payment.due_date|datebr }}</td>
+                    <td data-label="Status"><span class="status status-{{ payment.status }}">{{ payment.status|statusbr }}</span></td>
+                    <td data-label="Acoes">
+                        <div class="table-actions">
+                            {% if payment.status != 'paid' %}
+                            <form method="post" action="{{ url_for('mark_payment_paid', payment_id=payment.id) }}">
+                                <button type="submit" class="btn btn-primary">Marcar paga</button>
+                            </form>
+                            <a href="{{ url_for('open_manual_whatsapp', payment_id=payment.id) }}" target="_blank" rel="noopener" class="btn btn-ghost">Abrir WhatsApp</a>
+                            {% if use_twilio %}
+                            <form method="post" action="{{ url_for('send_payment_reminder', payment_id=payment.id) }}">
+                                <button type="submit" class="btn btn-secondary">Enviar via API</button>
+                            </form>
+                            {% endif %}
+                            {% else %}
+                            <div class="next-payment-note">
+                                {% if payment.next_due_display_date %}
+                                <span class="text-muted">Vencimento: {{ payment.next_due_display_date|datebr }}</span>
+                                {% if payment.next_payment_due_soon %}
+                                <span class="status status-pending">vence em breve</span>
+                                {% endif %}
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="empty-state">Nenhuma mensalidade encontrada.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

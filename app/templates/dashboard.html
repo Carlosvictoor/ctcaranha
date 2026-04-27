@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+{% block title %}Financeiro | CTC Aranha{% endblock %}
+
+{% block content %}
+<section class="hero-banner panel">
+    <div>
+        <p class="eyebrow">Operacao do dia {{ today|datebr }}</p>
+        <h2>Financeiro</h2>
+        <p>Controle financeiro das mensalidades, cobrancas do dia e andamento do mes.</p>
+    </div>
+    <div class="hero-accent"></div>
+</section>
+
+<section class="stats-grid">
+    <article class="stat-card emphasis-gold">
+        <span>Faturamento do mes</span>
+        <strong>{{ metrics.monthly_revenue|currency }}</strong>
+        <small>{{ metrics.current_month }}</small>
+    </article>
+    <article class="stat-card emphasis-yellow">
+        <span>Pendente</span>
+        <strong>{{ metrics.pending_amount|currency }}</strong>
+        <small>{{ metrics.pending_payments }} cobranca(s)</small>
+    </article>
+    <article class="stat-card emphasis-red">
+        <span>Atrasado</span>
+        <strong>{{ metrics.overdue_amount|currency }}</strong>
+        <small>{{ metrics.overdue_payments }} cobranca(s)</small>
+    </article>
+    <article class="stat-card emphasis-dark">
+        <span>Total de alunos</span>
+        <strong>{{ metrics.active_students }}</strong>
+        <small>alunos ativos</small>
+    </article>
+ </section>
+
+<section class="content-grid">
+    <article class="panel">
+        <div class="section-head">
+            <div>
+                <p class="eyebrow">Painel mensal</p>
+                <h3>Progresso do mes</h3>
+            </div>
+            <strong>{{ '%.0f'|format(metrics.month_progress_percent) }}%</strong>
+        </div>
+        <div class="progress-card">
+            <div class="progress-bar">
+                <span style="width: {{ 100 if metrics.month_progress_percent > 100 else metrics.month_progress_percent }}%"></span>
+            </div>
+            <div class="pill-stack">
+                <div class="pill-row">
+                    <span>Recebido</span>
+                    <strong>{{ metrics.monthly_revenue|currency }} de {{ metrics.month_total|currency }}</strong>
+                </div>
+                <div class="pill-row">
+                    <span>Ciclo atual</span>
+                    <strong>{{ metrics.current_month }}</strong>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <article class="panel">
+        <div class="section-head">
+            <div>
+                <p class="eyebrow">Acao rapida</p>
+                <h3>Acoes</h3>
+            </div>
+        </div>
+        <div class="list-stack">
+            <form method="post" action="{{ url_for('generate_payments') }}">
+                <button type="submit" class="btn btn-primary btn-hero-action">Gerar mensalidades</button>
+            </form>
+            <div class="action-row">
+                <a href="{{ url_for('payments', status='pending') }}" class="btn btn-secondary btn-compact-action">Cobrar no WhatsApp</a>
+                {% if use_twilio %}
+                <form method="post" action="{{ url_for('process_reminders') }}">
+                    <button type="submit" class="btn btn-ghost btn-compact-action">Envio automatico</button>
+                </form>
+                {% else %}
+                <a href="{{ url_for('payments') }}" class="btn btn-ghost btn-compact-action">Ver cobrancas</a>
+                {% endif %}
+            </div>
+        </div>
+    </article>
+
+    <article class="panel">
+        <div class="section-head">
+            <div>
+                <p class="eyebrow">Cobrancas recentes</p>
+                <h3>Cobrancas do dia</h3>
+            </div>
+            <a class="text-link" href="{{ url_for('payments') }}">Ver todas</a>
+        </div>
+        <div class="table-wrap compact">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Valor</th>
+                        <th>Vencimento</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for payment in metrics.current_day_charges %}
+                    <tr>
+                        <td data-label="Nome"><strong>{{ payment.student.full_name }}</strong></td>
+                        <td data-label="Valor">{{ payment.amount|currency }}</td>
+                        <td data-label="Vencimento">{{ payment.due_date|datebr }}</td>
+                        <td data-label="Status"><span class="status status-{{ payment.status }}">{{ payment.status|statusbr }}</span></td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="empty-state">Nenhuma cobranca agendada para hoje.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </article>
+
+    <article class="panel">
+        <div class="section-head">
+            <div>
+                <p class="eyebrow">Acompanhamento</p>
+                <h3>Alunos com pagamento pendente</h3>
+            </div>
+            <a class="text-link" href="{{ url_for('payments', status='pending') }}">Ver todas</a>
+        </div>
+        <div class="list-stack">
+            {% for payment in metrics.pending_students %}
+            <div class="list-item list-item-block">
+                <div>
+                    <strong>{{ payment.student.full_name }}</strong>
+                    <span>
+                        {% if payment.days_until_due < 0 %}
+                        {{ (payment.days_until_due * -1) }} dia(s) em atraso
+                        {% elif payment.days_until_due == 0 %}
+                        vence hoje
+                        {% else %}
+                        {{ payment.days_until_due }} dia(s) para vencer
+                        {% endif %}
+                    </span>
+                </div>
+                <div>
+                    <strong>{{ payment.amount|currency }}</strong>
+                    <span>{{ payment.due_date|datebr }}</span>
+                </div>
+            </div>
+            {% else %}
+            <div class="empty-state">Nenhum aluno com pagamento pendente.</div>
+            {% endfor %}
+        </div>
+    </article>
+</section>
+
+{% endblock %}

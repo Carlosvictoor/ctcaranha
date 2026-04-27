@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}Configuracoes | {{ app_settings.gym_name }}{% endblock %}
+
+{% block content %}
+<section class="section-head hero-inline">
+    <div>
+        <p class="eyebrow">Personalizacao</p>
+        <h2>Configuracoes do sistema</h2>
+    </div>
+</section>
+
+<section class="settings-grid">
+    <form method="post" class="panel form-grid">
+        <div class="full-width settings-preview">
+            <p class="eyebrow">Identidade do painel</p>
+            <h3>{{ settings.gym_name }}</h3>
+            <p>Controle o nome exibido no sistema e a regra dos lembretes automaticos.</p>
+        </div>
+
+        <label>
+            <span>Nome da academia</span>
+            <input type="text" name="gym_name" value="{{ settings.gym_name }}" required>
+        </label>
+
+        <label>
+            <span>Dias antes do vencimento</span>
+            <input type="number" min="0" max="30" name="reminder_days_before" value="{{ settings.reminder_days_before }}" required>
+        </label>
+
+        <label class="full-width">
+            <span>Template da mensagem WhatsApp</span>
+            <textarea name="whatsapp_template" rows="8" required>{{ settings.whatsapp_template }}</textarea>
+        </label>
+
+        <div class="full-width placeholder-strip">
+            {% for placeholder in placeholders %}
+            <span>{{ placeholder }}</span>
+            {% endfor %}
+        </div>
+
+        <div class="form-actions full-width">
+            <button type="submit" class="btn btn-primary">Salvar configuracoes</button>
+        </div>
+    </form>
+</section>
+
+<section class="settings-grid top-gap">
+    <form method="post" action="{{ url_for('change_password') }}" class="panel form-grid">
+        <div class="full-width settings-preview">
+            <p class="eyebrow">Seguranca</p>
+            <h3>Troca de senha do admin</h3>
+            <p>Use uma senha forte para o acesso principal do sistema.</p>
+        </div>
+        <label>
+            <span>Senha atual</span>
+            <input type="password" name="current_password" required>
+        </label>
+        <label>
+            <span>Nova senha</span>
+            <input type="password" name="new_password" minlength="8" required>
+        </label>
+        <label class="full-width">
+            <span>Confirmar nova senha</span>
+            <input type="password" name="confirm_password" minlength="8" required>
+        </label>
+        <div class="form-actions full-width">
+            <button type="submit" class="btn btn-primary">Atualizar senha</button>
+        </div>
+    </form>
+</section>
+{% endblock %}

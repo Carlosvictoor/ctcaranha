@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Login | CTC Aranha{% endblock %}
+
+{% block content %}
+<section class="login-stage">
+    <header class="login-brand">
+        <span class="login-brand-mark">CTC</span>
+        <div>
+            <p class="eyebrow">Academia de Muay Thai</p>
+            <h1>CTC Aranha</h1>
+            <p class="login-support">Gestao forte, visual marcante e operacao pronta para acompanhar a academia inteira.</p>
+        </div>
+    </header>
+
+    <div class="login-hero">
+        <div class="login-copy">
+            <p class="eyebrow">Sistema de Gestao</p>
+            <h2>Forca na gestao. Precisao no controle.</h2>
+            <p>
+                Centralize alunos, mensalidades, relatorios e lembretes de WhatsApp em um unico painel.
+            </p>
+            <div class="feature-grid">
+                <article class="feature-card">
+                    <strong>Cadastro agil</strong>
+                    <span>Dados completos dos alunos e planos em poucos cliques.</span>
+                </article>
+                <article class="feature-card">
+                    <strong>Financeiro visivel</strong>
+                    <span>Mensalidades, inadimplencia e previsao de receita em destaque.</span>
+                </article>
+                <article class="feature-card">
+                    <strong>Aviso automatico</strong>
+                    <span>Fluxo pronto para lembretes de cobranca por WhatsApp.</span>
+                </article>
+            </div>
+        </div>
+
+        <div class="login-form-wrap">
+            <form method="post" class="panel login-panel">
+                <span class="badge">Admin</span>
+                <h3>Entrar no painel</h3>
+                <p>Use o acesso padrao para iniciar a operacao da academia.</p>
+
+                <label>
+                    <span>Usuario</span>
+                    <input type="text" name="username" placeholder="admin" required>
+                </label>
+
+                <label>
+                    <span>Senha</span>
+                    <input type="password" name="password" placeholder="ctc123" required>
+                </label>
+
+                <button type="submit" class="btn btn-primary">Entrar</button>
+                <small>Login padrao: admin / ctc123</small>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
