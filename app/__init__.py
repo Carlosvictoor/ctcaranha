@@ -11,6 +11,21 @@ from app.extensions import db, login_manager, scheduler
 from app.models import AppSettings, ClassSchedule, Payment, Student, TrainingPlan, User, get_app_settings
 
 
+def resolve_asset_version(app):
+    tracked_files = [
+        Path(app.static_folder) / "css" / "style.css",
+        Path(app.static_folder) / "manifest.webmanifest",
+        Path(app.static_folder) / "icons" / "icon-app.svg",
+        Path(app.static_folder) / "sw.js",
+    ]
+    existing_files = [file_path for file_path in tracked_files if file_path.exists()]
+    if not existing_files:
+        return datetime.utcnow().strftime("%Y%m%d%H%M%S")
+
+    latest_mtime = max(int(file_path.stat().st_mtime) for file_path in existing_files)
+    return str(latest_mtime)
+
+
 def resolve_database_uri(app):
     database_url = os.getenv("DATABASE_URL")
     if database_url:
@@ -35,7 +50,6 @@ def create_app():
     load_dotenv()
     app = Flask(__name__)
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "ctc-aranha-secret")
-    app.config["ASSET_VERSION"] = os.getenv("ASSET_VERSION") or datetime.utcnow().strftime("%Y%m%d%H%M%S")
     app.config["SQLALCHEMY_DATABASE_URI"] = resolve_database_uri(app)
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["SESSION_COOKIE_HTTPONLY"] = True
@@ -63,7 +77,7 @@ def create_app():
         return {
             "current_year": datetime.now().year,
             "app_settings": get_app_settings(),
-            "asset_version": app.config["ASSET_VERSION"],
+            "asset_version": os.getenv("ASSET_VERSION") or resolve_asset_version(app),
         }
 
     @app.template_filter("currency")

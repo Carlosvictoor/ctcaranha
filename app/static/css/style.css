@@ -131,6 +131,10 @@ textarea,
     display: none;
 }
 
+.sidebar-backdrop[hidden] {
+    display: none !important;
+}
+
 .mobile-shell-bar {
     align-items: center;
     justify-content: space-between;
@@ -1121,8 +1125,7 @@ th {
     }
 
     .brand-orbit {
-        width: 220px;
-        height: 220px;
+        display: none;
     }
 }
 
