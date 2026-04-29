@@ -30,9 +30,7 @@ def resolve_database_uri(app):
     database_url = os.getenv("DATABASE_URL")
     if database_url:
         if database_url.startswith("postgres://"):
-            database_url = database_url.replace("postgres://", "postgresql+psycopg://", 1)
-        elif database_url.startswith("postgresql://") and "+" not in database_url.split("://", 1)[0]:
-            database_url = database_url.replace("postgresql://", "postgresql+psycopg://", 1)
+            database_url = database_url.replace("postgres://", "postgresql://", 1)
         return database_url
 
     sqlite_path = os.getenv("SQLITE_PATH")
@@ -49,8 +47,8 @@ def resolve_database_uri(app):
 def create_app():
     load_dotenv()
     app = Flask(__name__)
-    app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "ctc-aranha-secret")
-    app.config["SQLALCHEMY_DATABASE_URI"] = resolve_database_uri(app)
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL") or resolve_database_uri(app)
+    app.config["SECRET_KEY"] = os.getenv("SECRET_KEY") or "ctc-aranha-secret"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["SESSION_COOKIE_HTTPONLY"] = True
     app.config["SESSION_COOKIE_SAMESITE"] = "Lax"

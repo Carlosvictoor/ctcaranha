@@ -86,5 +86,5 @@ Pelo menu de configurações do painel é possível alterar:
 - Tambem existe `app.py` na raiz para compatibilidade extra com detectores automaticos de entrypoint.
 - No painel do Railway, configure pelo menos `SECRET_KEY` e `DATABASE_URL`.
 - O `PORT` e fornecido automaticamente pelo Railway e nao precisa ser definido manualmente.
-- Se o banco for PostgreSQL do proprio Railway, use a URL entregue pelo plugin sem alterar manualmente.
+- Se o banco for PostgreSQL do proprio Railway, use a URL entregue pelo plugin em `DATABASE_URL`.
 - Em producao no Railway, evite usar o SQLite interno da aplicacao porque o filesystem pode ser recriado a cada deploy.
