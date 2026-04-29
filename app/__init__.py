@@ -47,7 +47,7 @@ def resolve_database_uri(app):
 def create_app():
     load_dotenv()
     app = Flask(__name__)
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL") or resolve_database_uri(app)
+    app.config["SQLALCHEMY_DATABASE_URI"] = resolve_database_uri(app)
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY") or "ctc-aranha-secret"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["SESSION_COOKIE_HTTPONLY"] = True
