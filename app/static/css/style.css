@@ -564,17 +564,28 @@ textarea:focus {
 }
 
 .progress-bar {
+    appearance: none;
+    -webkit-appearance: none;
     width: 100%;
     height: 16px;
     background: rgba(255, 255, 255, 0.06);
+    border: 0;
     border-radius: 999px;
     overflow: hidden;
 }
 
-.progress-bar span {
-    display: block;
-    height: 100%;
-    border-radius: inherit;
+.progress-bar::-webkit-progress-bar {
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 999px;
+}
+
+.progress-bar::-webkit-progress-value {
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--gold), var(--red));
+}
+
+.progress-bar::-moz-progress-bar {
+    border-radius: 999px;
     background: linear-gradient(90deg, var(--gold), var(--red));
 }
 

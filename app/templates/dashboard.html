@@ -45,9 +45,11 @@
             <strong>{{ '%.0f'|format(metrics.month_progress_percent) }}%</strong>
         </div>
         <div class="progress-card">
-            <div class="progress-bar">
-                <span style="width: {{ 100 if metrics.month_progress_percent > 100 else metrics.month_progress_percent }}%"></span>
-            </div>
+            <progress
+                class="progress-bar"
+                max="100"
+                value="{{ 0 if metrics.month_progress_percent < 0 else 100 if metrics.month_progress_percent > 100 else metrics.month_progress_percent }}"
+            ></progress>
             <div class="pill-stack">
                 <div class="pill-row">
                     <span>Recebido</span>

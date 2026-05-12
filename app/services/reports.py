@@ -103,12 +103,13 @@ def recent_notifications(limit=10):
 
 
 def class_schedule_overview():
-    return (
+    rows = (
         db.session.query(
             ClassSchedule.id,
             ClassSchedule.title,
             ClassSchedule.day_of_week,
-            func.printf("%s-%s", ClassSchedule.start_time, ClassSchedule.end_time),
+            ClassSchedule.start_time,
+            ClassSchedule.end_time,
             ClassSchedule.level,
             ClassSchedule.active,
             func.count(Student.id),
@@ -118,6 +119,8 @@ def class_schedule_overview():
         .order_by(ClassSchedule.day_of_week.asc(), ClassSchedule.start_time.asc())
         .all()
     )
+    # Format time range for display
+    return [(row[0], row[1], row[2], f"{row[3]}-{row[4]}", row[5], row[6], row[7]) for row in rows]
 
 
 def training_plan_rows():
